@@ -2,14 +2,25 @@ import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
+import AddTask from "./pages/AddTask.jsx";
+import { addTask } from "./api/tasks.js";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   console.log(user);
-
+  
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
+  };
+  
+  const handleAddTask = async (task) => {
+    try {
+      const newTask = await addTask(task);
+      console.log("Task added:", newTask);
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   };
 
   return (
@@ -32,7 +43,16 @@ function App() {
             )
           }
         />
-
+        <Route
+          path="/add-task"
+          element={
+            user ? (
+              <AddTask onAddTask={handleAddTask} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
         {/* Redirect tất cả các path khác về /login */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>

@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import TaskList from "../components/TaskList";
 import { getTasks } from "../api/tasks";
+import { useNavigate } from "react-router-dom";
+
 export default function Home({ user, onLogout }) {
+  const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);      // lưu task từ backend
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,7 +30,13 @@ export default function Home({ user, onLogout }) {
       <div>
         <h1 className="text-2xl font-bold mb-4">Danh sách Task</h1>
         <TaskList tasks={tasks} />
-      </div>
+      </div>        
+      <button
+          onClick={() => navigate("/add-task")}
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          ➕ Thêm Task
+      </button>
       <button
         onClick={onLogout}
           type="submit"

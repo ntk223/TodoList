@@ -6,14 +6,6 @@ const getAllTasks = async (req, res) => {
 }
 
 const createTask = async (req, res) => {
-    const tmpTask = {
-        title: "Sample Task",
-        description: "This is a sample task",
-        priority: "High",
-        due_date: "2024-12-31",
-        user_id: 1
-
-    }
     const newTask = req.body;
     const createdTask = await taskModel.createTask(newTask);
     res.status(201).json(createdTask);

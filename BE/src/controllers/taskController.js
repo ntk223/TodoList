@@ -46,10 +46,18 @@ const deleteTask = async (req, res) => {
     }
 }
 
+const getTaskByUserId = async (req, res) => {
+    const userId = req.params.uid;
+    const tasks = await taskModel.getTaskByUserId(userId);
+    res.json(tasks);
+}
+
+
 export const taskController = {
     getAllTasks,
     createTask,
     getTaskById,
     updateTask,
     deleteTask,
+    getTaskByUserId,
 }

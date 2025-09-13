@@ -1,26 +1,30 @@
 import { useState } from "react";
-
-export default function Login() {
+import { useNavigate } from "react-router-dom"; // <- import hook
+import { login } from "../api/auth.js";
+export default function Login({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate(); // <- tạo navigate
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
+      const data = await login(email, password);
       console.log(data);
+
       if (data.user) {
         setMessage("✅ Đăng nhập thành công!");
+
         // Lưu user vào localStorage
         localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Cập nhật state user ở App.jsx
+        if (setUser) setUser(data.user);
+
+        // Chuyển sang trang Home
+        navigate("/home");
       } else {
         setMessage("❌ " + data.message);
       }

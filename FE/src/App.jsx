@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
-import Home from "./pages/Home";
+import Login from "./pages/Login.jsx";
+import Home from "./pages/Home.jsx";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  console.log(user);
 
   const handleLogout = () => {
     localStorage.removeItem("user");

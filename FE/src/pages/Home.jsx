@@ -21,7 +21,7 @@ export default function Home({ user, onLogout }) {
         setError(err.message);
         setLoading(false);
       });
-  }, []);
+  });
   const handleDelete = async (taskId) => {
     try {
       await deleteTask(taskId);

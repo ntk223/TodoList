@@ -6,6 +6,7 @@ import AddTask from "./pages/AddTask.jsx";
 import { addTask } from "./api/tasks.js";
 import Navbar from "./components/Navbar.jsx";
 import UserProfile from "./pages/UserProfile.jsx";
+import { changeProfile } from "./api/users.js";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
@@ -24,6 +25,19 @@ function App() {
       console.error("Error adding task:", error);
     }
   };
+  const handleChangeProfile = async (id, fields) => {
+    try {
+      const updatedUser = await changeProfile(id, fields);
+      console.log("User updated:", updatedUser);
+      // Cập nhật user trong localStorage và state
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+
+
 
   return (
     <Router>
@@ -50,7 +64,7 @@ function App() {
           path="/user-profile"
           element={
             user ? (
-              <UserProfile user={user} />
+              <UserProfile user={user} onUpdateUser={handleChangeProfile} />
             ) : (
               <Navigate to="/login" />
             )

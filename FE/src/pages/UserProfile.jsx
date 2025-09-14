@@ -16,7 +16,7 @@ const UserProfile = ({ user, onUpdateUser }) => {
 
   const handleSave = () => {
     // Call API update user ở đây
-    onUpdateUser(formData); 
+    onUpdateUser(user.id, formData);
     setIsEditing(false);
   };
 

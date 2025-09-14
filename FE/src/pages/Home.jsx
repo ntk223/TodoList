@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import TaskList from "../components/TaskList";
-import { getTasks } from "../api/tasks";
+import { getTasks, deleteTask, updateTask } from "../api/tasks";
 import { useNavigate } from "react-router-dom";
+// import Navbar from "../components/Navbar.jsx";
 
 export default function Home({ user, onLogout }) {
   const navigate = useNavigate();
@@ -21,15 +22,33 @@ export default function Home({ user, onLogout }) {
         setLoading(false);
       });
   }, []);
+  const handleDelete = async (taskId) => {
+    try {
+      await deleteTask(taskId);
+      setTasks(tasks.filter((task) => task.id !== taskId));
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  }
+
+  const handleUpdate = async (updatedTask) => {
+    try {
+      const data = await updateTask(updatedTask);
+      setTasks(tasks.map((task) => (task.id === data.id ? data : task)));
+    } catch (error) {
+      console.error("Error updating task:", error);
+    }
+  }
 
   if (loading) return <p>⏳ Đang tải...</p>;
   if (error) return <p>❌ Lỗi: {error}</p>;
 
   return (
     <div className="">
+      {/* <Navbar /> */}
       <div>
         <h1 className="text-2xl font-bold mb-4">Danh sách Task</h1>
-        <TaskList tasks={tasks} />
+        <TaskList tasks={tasks} onDelete={handleDelete} onSave={handleUpdate} />
       </div>        
       <button
           onClick={() => navigate("/add-task")}

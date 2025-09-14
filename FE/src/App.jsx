@@ -4,6 +4,8 @@ import Login from "./pages/Login.jsx";
 import Home from "./pages/Home.jsx";
 import AddTask from "./pages/AddTask.jsx";
 import { addTask } from "./api/tasks.js";
+import Navbar from "./components/Navbar.jsx";
+import UserProfile from "./pages/UserProfile.jsx";
 
 function App() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
@@ -25,6 +27,7 @@ function App() {
 
   return (
     <Router>
+      <Navbar />
       <Routes>
         {/* Nếu đã login, redirect từ /login → /home */}
         <Route
@@ -43,6 +46,18 @@ function App() {
             )
           }
         />
+        <Route
+          path="/user-profile"
+          element={
+            user ? (
+              <UserProfile user={user} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+          
+        
         <Route
           path="/add-task"
           element={

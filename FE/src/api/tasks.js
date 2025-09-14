@@ -7,6 +7,8 @@ export async function getTasks(userId) {
     return data;
 }
 
+// stringify: chuyển object/array thành chuỗi JSON
+// parse: chuyển chuỗi JSON thành object/array
 export async function addTask(task) {
   const res = await fetch(`${API_URL}/tasks`, { 
     method: "POST",
@@ -16,3 +18,21 @@ export async function addTask(task) {
   if (!res.ok) throw new Error("Lỗi khi thêm task");
   return res.json();
 }
+
+export async function deleteTask(taskId) {
+  const res = await fetch(`${API_URL}/tasks/${taskId}`, { 
+    method: "DELETE",
+  });
+  if (!res.ok) throw new Error("Lỗi khi xóa task");
+  return res.json();
+}
+
+export async function updateTask(task) {
+  const res = await fetch(`${API_URL}/tasks/${task.id}`, { 
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(task),
+  });
+  if (!res.ok) throw new Error("Lỗi khi cập nhật task");
+  return res.json();
+} 

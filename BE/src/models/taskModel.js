@@ -10,6 +10,11 @@ const getTaskByUserId = async (userId) => {
     return rows;
 }
 
+const getTaskById = async (id) => {
+    const [rows] = await pool.query('SELECT * FROM tasks WHERE id = ?', [id]);
+    return rows[0];
+}
+
 const createTask = async (task) => {
     try {
         const [result] = await pool.query('INSERT INTO tasks (title, description, priority, due_date, user_id) VALUES (?, ?, ?, ?, ?)', 

@@ -1,5 +1,9 @@
 import pool from '../config/database.js';
 
+function toMySQLDatetime(isoString) {
+  return new Date(isoString).toISOString().slice(0, 19).replace('T', ' ');
+}
+
 const getAllTasks = async () => {
     const [rows] = await pool.query('SELECT * FROM tasks');
     return rows;
@@ -26,7 +30,17 @@ const createTask = async (task) => {
     }
 }
 
+
+// bug
 const updateTask = async (id, fields) => {
+    console.log(fields);
+    fields.due_date = toMySQLDatetime(fields.due_date);
+    fields.created_at = toMySQLDatetime(fields.created_at);
+    fields.updated_at = toMySQLDatetime(new Date().toISOString());
+    // fields.updated_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    // fields.created_at = new Date(fields.created_at).toISOString().slice(0, 19).replace('T', ' ');
+
+
     const key = Object.keys(fields);
     const values = Object.values(fields);
     const setString = key.map(k => `${k} = ?`).join(', ');

@@ -1,15 +1,12 @@
 import { userModel } from "../models/userModel.js";
-
-const changeProfile = async (req, res) => {
-
+import asyncHandler from "../utils/asyncHandler.js";
+const changeProfile = asyncHandler(async (req, res, next) => {
     const updatedUser = await userModel.changeProfile(req.params.id, req.body)
     if (updatedUser) {
         res.status(200).json(updatedUser)
     }
-    else {
-        res.status(400).send("update fail")
-    }
-}
+});
+
 
 export const userController = {
     changeProfile,

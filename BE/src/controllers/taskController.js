@@ -1,9 +1,9 @@
 import {taskModel} from '../models/taskModel.js';
-
-const getAllTasks = async (req, res) => {
+import asyncHandler from '../utils/asyncHandler.js';
+const getAllTasks = asyncHandler(async (req, res) => {
     const tasks = await taskModel.getAllTasks();
     res.json(tasks);
-}
+})
 
 const createTask = async (req, res) => {
     const newTask = req.body;
@@ -15,20 +15,17 @@ const getTaskById = (req, res) => {
     res.send(`Get task with ID: ${req.params.id}`)
 }
 
-const updateTask = async (req, res) => {
+const updateTask = asyncHandler(async (req, res) => {
     const fields = req.body;
     if (Object.keys(fields).length === 0) {
         return res.status(400).send('No fields to update.');
     }
     const updatedTask = await taskModel.updateTask(req.params.id, fields);
-    if (updatedTask) {
-        res.status(200).json(updatedTask);
-    } else {
-        res.status(404).send(`Task with ID: ${req.params.id} not found.`);
-    }
-}
+    res.status(200).json(updatedTask);
+    
+})
 
-const deleteTask = async (req, res) => {
+const deleteTask = asyncHandler(async (req, res) => {
     const deleted = await taskModel.deleteTask(req.params.id)
     if (deleted) {
         return res.json('Delete Success')
@@ -36,13 +33,13 @@ const deleteTask = async (req, res) => {
     else {
         res.status(404).send(`Task with ID: ${req.params.id} not found.`);
     }
-}
+})
 
-const getTaskByUserId = async (req, res) => {
+const getTaskByUserId = asyncHandler(async (req, res) => {
     const userId = req.params.uid;
     const tasks = await taskModel.getTaskByUserId(userId);
     res.json(tasks);
-}
+})
 
 
 export const taskController = {

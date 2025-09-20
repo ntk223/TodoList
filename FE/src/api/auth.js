@@ -1,23 +1,19 @@
-const API_URL = "http://localhost:5000";
+import api from "./api.js"
 
 export async function login(email, password) {
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
-  if (!res.ok) throw new Error("Lỗi khi đăng nhập");
-  return res.json();
+  try {
+    const response = await api.post('/auth/login', { email, password });    
+    return response.data;
+  } catch (error) {
+    throw new Error("Lỗi khi đăng nhập");
+  }
 }
 
 export async function register(email, password, username) {
-  const res = await fetch(`${API_URL}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, email, password }),
-  });
-  if (!res.ok) throw new Error("Lỗi khi đăng ký");
-  // console.log(res.json());
-  
-  return res.json();
+  try {
+    const response = await api.post('/auth/register', { username, email, password });
+    return response.data;
+  } catch (error) {
+    throw new Error("Lỗi khi đăng ký");
+  }
 }

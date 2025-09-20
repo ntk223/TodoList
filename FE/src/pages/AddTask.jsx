@@ -6,7 +6,6 @@ export default function AddTask({ onAddTask }) {
 
   const handleAddTask = (task) => {
     onAddTask(task);
-    navigate("/home"); // sau khi thêm → quay về home
   };
 
   return (

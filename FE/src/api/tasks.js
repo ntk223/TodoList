@@ -1,7 +1,7 @@
 const API_URL = "http://localhost:5000";
 
 export async function getTasks(userId) {
-    const res = await fetch(`http://localhost:5000/tasks/${userId}`);
+    const res = await fetch(`${API_URL}/tasks/${userId}`);
     if (!res.ok) throw new Error("Lỗi khi lấy tasks từ server");
     const data = await res.json();
     return data;
@@ -34,5 +34,7 @@ export async function updateTask(task) {
     body: JSON.stringify(task),
   });
   if (!res.ok) throw new Error("Lỗi khi cập nhật task");
+  // console.log(res.json());
+  
   return res.json();
 } 

@@ -92,7 +92,7 @@ export default function TaskItem({ task, index, onSave, onDelete }) {
           <input
             type="date"
             name="due_date"
-            value={editedTask.due_date || ""}
+            value={editedTask.due_date ? editedTask.due_date.split("T")[0] : ""}
             onChange={handleChange}
             className="border p-1 rounded w-full"
           />

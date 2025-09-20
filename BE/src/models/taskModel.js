@@ -6,8 +6,12 @@ const getAllTasks = async () => {
     return rows;
 }
 
+//fix due_date format
 const getTaskByUserId = async (userId) => {
     const [rows] = await pool.query('SELECT * FROM tasks WHERE user_id = ?', [userId]);
+    rows.forEach(row => {
+        row.due_date = new Date(row.due_date).toISOString().slice(0, 19).replace('T', ' ');
+    });
     return rows;
 }
 
@@ -46,6 +50,7 @@ const updateTask = async (id, fields) => {
     if (!updatedTask) {
         throw new ApiError(404, `Task with ID: ${id} not found.`);
     }
+    
     return updatedTask;
 
     // return result.affectedRows > 0;

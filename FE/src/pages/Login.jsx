@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // <- import hook
 import { login } from "../api/auth.js";
+import { Link } from 'react-router-dom';
 export default function Login({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +25,7 @@ export default function Login({ setUser }) {
         if (setUser) setUser(data.user);
 
         // Chuyển sang trang Home
-        navigate("/home");
+        navigate("/");
       } else {
         setMessage("❌ " + data.message);
       }
@@ -70,6 +71,12 @@ export default function Login({ setUser }) {
           <p className="mt-3 text-center text-sm text-red-500">{message}</p>
         )}
       </form>
+      <div>
+        <Link to="/register" className="text-blue-500 hover:underline">
+          Chưa có tài khoản? Đăng ký ngay
+        </Link>
+      </div>
+
     </div>
   );
 }

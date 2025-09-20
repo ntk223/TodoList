@@ -1,14 +1,21 @@
 import { useState, useEffect } from "react";
 import TaskList from "../components/TaskList";
-import { getTasks, deleteTask, updateTask } from "../api/tasks";
+import { getTasks, deleteTask, updateTask, addTask } from "../api/tasks";
 import { useNavigate } from "react-router-dom";
-// import Navbar from "../components/Navbar.jsx";
+import Navbar from "../components/Navbar.jsx";
+import { Routes, Route } from "react-router-dom";
+import AddTask from "./AddTask.jsx";
+import UserProfile from "./UserProfile.jsx";
 
-export default function Home({ user, onLogout }) {
+import { changeProfile } from "../api/users.js";
+
+export default function Home({ user, setUser, onLogout }) {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);      // lưu task từ backend
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentUser, setCurrentUser] = useState(user);
+
     // example: tasks ban dau co gia tri [], setTasks de cap nhat tasks
     // gọi API khi component mount
   useEffect(() => {
@@ -21,7 +28,9 @@ export default function Home({ user, onLogout }) {
         setError(err.message);
         setLoading(false);
       });
-  });
+  }, [user.id]); // Update tasks whenever user.id changes or when returning to Home
+
+  // hàm xóa task
   const handleDelete = async (taskId) => {
     try {
       await deleteTask(taskId);
@@ -40,34 +49,41 @@ export default function Home({ user, onLogout }) {
     }
   }
 
+  const handleAddTask = async (task) => {
+      try {
+        const newTask = await addTask(task);
+        console.log("Task added:", newTask);
+        setTasks([...tasks, newTask]);
+        navigate("/"); // sau khi thêm → quay về home
+
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
+    };
+const handleChangeProfile = async (id, fields) => {
+    try {
+      const currentUser = await changeProfile(id, fields);
+      localStorage.setItem("user", JSON.stringify(currentUser));
+      setUser(currentUser); // ✅ update state từ App
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
+
   if (loading) return <p>⏳ Đang tải...</p>;
   if (error) return <p>❌ Lỗi: {error}</p>;
 
   return (
     <div className="">
-      {/* <Navbar /> */}
-      <div>
-        <h1 className="text-2xl font-bold mb-4">Danh sách Task</h1>
-        <TaskList tasks={tasks} onDelete={handleDelete} onSave={handleUpdate} />
-      </div>        
-      <button
-          onClick={() => navigate("/add-task")}
-          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-        >
-          ➕ Thêm Task
-      </button>
-      <button
-        onClick={onLogout}
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
-        >
-          Đăng xuất
-      </button>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<TaskList tasks={tasks} onDelete={handleDelete} onSave={handleUpdate} />} />
+        <Route path="/add-task" element={<AddTask onAddTask={handleAddTask} />} />
+        <Route path="/user-profile" element={<UserProfile user={user} onUpdateUser={handleChangeProfile} />} />
+      </Routes>
+      <button onClick={() => navigate("/add-task")}>Thêm công việc</button> <br />
+      <button onClick={onLogout}>Đăng xuất</button>
 
     </div>
-
-    
-
-    
   );
 }

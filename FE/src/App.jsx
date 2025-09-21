@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
 import Home from "./pages/Home.jsx";
-import { isTokenValid, getTokenFromStorage, removeToken } from "./utils/auth.js";
+import { isTokenValid, getTokenFromStorage, getRefreshTokenFromStorage, removeTokens } from "./utils/auth.js";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -12,14 +12,27 @@ function App() {
   useEffect(() => {
     // Kiểm tra token khi app khởi động
     const checkAuth = () => {
-      const storedUser = JSON.parse(localStorage.getItem("user"));
+      const storedUser = JSON.parse(localStorage.getItem("user")) // json -> object
+      console.log(storedUser)
       const token = getTokenFromStorage();
+      const refreshToken = getRefreshTokenFromStorage();
       
-      if (storedUser && token && isTokenValid(token)) {
-        setUser(storedUser);
+      if (storedUser && token && refreshToken) {
+        // If access token is valid, user is authenticated
+        if (isTokenValid(token)) {
+          setUser(storedUser);
+        } else if (isTokenValid(refreshToken)) {
+          // Access token expired but refresh token is valid
+          // The API interceptor will handle refreshing automatically
+          setUser(storedUser);
+        } else {
+          // Both tokens expired
+          removeTokens();
+          setUser(null);
+        }
       } else {
-        // Token không hợp lệ hoặc hết hạn
-        removeToken();
+        // No tokens found
+        removeTokens();
         setUser(null);
       }
       
@@ -30,7 +43,7 @@ function App() {
   }, []);
 
   const handleLogout = () => {
-    removeToken();
+    removeTokens();
     setUser(null);
   };
 

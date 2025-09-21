@@ -45,8 +45,16 @@ const login = async (email, password) => {
         { expiresIn: env.JWT_EXPIRE }
     );
     
+    // Generate refresh token with longer expiration
+    const refreshToken = jwt.sign(
+        payload,
+        env.REFRESH_TOKEN_SECRET,
+        { expiresIn: env.REFRESH_TOKEN_EXPIRE }
+    );
+    
     return {
         accessToken,
+        refreshToken,
         user: {
             id: user.id,
             email: user.email,

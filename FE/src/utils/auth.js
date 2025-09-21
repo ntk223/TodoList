@@ -15,9 +15,20 @@ export const isTokenValid = (token) => {
 
 export const getTokenFromStorage = () => {
   const user = JSON.parse(localStorage.getItem('user'));
+  if (!user) return null;
   return user?.accessToken || null;
 };
 
-export const removeToken = () => {
+export const getRefreshTokenFromStorage = () => {
+  const user = JSON.parse(localStorage.getItem('user'));  
+  if (!user) return null;
+  return user?.refreshToken || null;
+};
+
+export const saveTokensToStorage = (userData) => {
+  localStorage.setItem('user', JSON.stringify(userData));
+};
+
+export const removeTokens = () => {
   localStorage.removeItem('user');
 };

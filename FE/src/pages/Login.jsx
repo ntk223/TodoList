@@ -12,22 +12,22 @@ export default function Login({ setUser }) {
     e.preventDefault();
 
     try {
-      const data = await login(email, password);
-      console.log(data);
+      const user = await login(email, password);
+      console.log(user);
 
-      if (data.user) {
+      if (user) {
         setMessage("✅ Đăng nhập thành công!");
 
         // Lưu user vào localStorage
-        localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(user));
 
         // Cập nhật state user ở App.jsx
-        if (setUser) setUser(data.user);
+        if (setUser) setUser(user);
 
         // Chuyển sang trang Home
         navigate("/");
       } else {
-        setMessage("❌ " + data.message);
+        setMessage("❌ " + user.message);
       }
     } catch (err) {
       setMessage("❌ Lỗi server: " + err.message);

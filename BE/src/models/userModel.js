@@ -1,7 +1,8 @@
 import pool from "../config/database.js"
 import ApiError from '../utils/ApiError.js'
 import bcrypt from 'bcrypt';
-
+import jwt from 'jsonwebtoken';
+import { env } from "../config/environment.js";
 const register = async (email, password, username) => {
     const [existingUser] = await pool.query(
         'SELECT * FROM users WHERE email = ?',
@@ -31,7 +32,27 @@ const login = async (email, password) => {
     if (!isPasswordValid) {
         throw new ApiError(401, "Invalid password");
     }
-    return user;
+    // use jwt
+    // jwt structure: header.payload.signature
+    // header: algorithm, type
+    // payload: data
+    // signature: hash(header + payload + secret)
+    // not to do: store sensitive info in payload
+    const payload = { id: user.id, email: user.email };
+    const accessToken = jwt.sign(
+        payload, 
+        env.JWT_SECRET, 
+        { expiresIn: env.JWT_EXPIRE }
+    );
+    
+    return {
+        accessToken,
+        user: {
+            id: user.id,
+            email: user.email,
+            username: user.username
+        }
+    }
 }
 
 const getUserById = async (id) => {

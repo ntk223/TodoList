@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { register } from '../api/auth';
+import { register } from '../api/auth.js';
 import { useNavigate } from 'react-router-dom';
-const Register = ({ setUser }) => {
+const Register = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
@@ -24,19 +24,15 @@ const Register = ({ setUser }) => {
             alert('Passwords do not match');
             return;
         }
-        // Handle registration logic here
-        console.log('Registration data:', formData);
+
+        // Call API to register
         const res = await register(formData.email, formData.password, formData.username);
-        const newUser = res.user;
-        if (newUser) {
-            // Lưu user vào localStorage
-            localStorage.setItem("user", JSON.stringify(newUser));
+        console.log('Registration response:', res);
+        // const newUser = res.user;
+        if (res) {
 
-            // Cập nhật state user ở App.jsx
-            if (setUser) setUser(newUser);
-
-            // Chuyển sang trang Home
-            navigate("/");
+            // Chuyển sang trang Login
+            navigate("/login");
         } else {
             setMessage("❌ " + data.message);
         }

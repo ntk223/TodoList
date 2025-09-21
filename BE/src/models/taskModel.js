@@ -34,8 +34,6 @@ const createTask = async (task) => {
 
 }
 
-
-// bug
 const updateTask = async (id, fields) => {
     // console.log(fields);
     if (fields.due_date) fields.due_date = toMySQLDatetime(fields.due_date);

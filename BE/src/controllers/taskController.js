@@ -1,13 +1,13 @@
-import {taskModel} from '../models/taskModel.js';
+import { taskService } from '../services/taskService.js';
 import asyncHandler from '../utils/asyncHandler.js';
 const getAllTasks = asyncHandler(async (req, res) => {
-    const tasks = await taskModel.getAllTasks();
+    const tasks = await taskService.getAllTasks();
     res.json(tasks);
 })
 
 const createTask = async (req, res) => {
     const newTask = req.body;
-    const createdTask = await taskModel.createTask(newTask);
+    const createdTask = await taskService.createTask(newTask);
     res.status(201).json(createdTask);
 }
 
@@ -20,13 +20,13 @@ const updateTask = asyncHandler(async (req, res) => {
     if (Object.keys(fields).length === 0) {
         return res.status(400).send('No fields to update.');
     }
-    const updatedTask = await taskModel.updateTask(req.params.id, fields);
+    const updatedTask = await taskService.updateTask(req.params.id, fields);
     res.status(200).json(updatedTask);
     
 })
 
 const deleteTask = asyncHandler(async (req, res) => {
-    const deleted = await taskModel.deleteTask(req.params.id)
+    const deleted = await taskService.deleteTask(req.params.id)
     if (deleted) {
         return res.json('Delete Success')
     }
@@ -37,7 +37,7 @@ const deleteTask = asyncHandler(async (req, res) => {
 
 const getTaskByUserId = asyncHandler(async (req, res) => {
     const userId = req.params.uid;
-    const tasks = await taskModel.getTaskByUserId(userId);
+    const tasks = await taskService.getTaskByUserId(userId);
     res.json(tasks);
 })
 

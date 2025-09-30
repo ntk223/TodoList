@@ -1,0 +1,39 @@
+services:
+  db:
+    image: mysql:8
+    container_name: mysql8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456       # mật khẩu root
+      MYSQL_DATABASE: mydb              # DB mặc định tạo sẵn
+      MYSQL_USER: user1                 # user phụ
+      MYSQL_PASSWORD: pass1             # mật khẩu user phụ
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: 123456
+    ports:
+      - "8080:80"
+      
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+volumes:
+  mysql_data:
+  portainer_data:
+

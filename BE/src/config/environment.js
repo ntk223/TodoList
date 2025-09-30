@@ -10,6 +10,8 @@ export const env = {
     JWT_SECRET: process.env.JWT_SECRET,
     JWT_EXPIRE: process.env.JWT_EXPIRE,
     REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
-    REFRESH_TOKEN_EXPIRE: process.env.REFRESH_TOKEN_EXPIRE
+    REFRESH_TOKEN_EXPIRE: process.env.REFRESH_TOKEN_EXPIRE,
+    REDIS_PORT: process.env.REDIS_PORT,
+    CACHE_EXPIRATION: process.env.CACHE_EXPIRATION,
 }
 
